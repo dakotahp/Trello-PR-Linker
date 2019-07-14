@@ -8,6 +8,7 @@ import (
   "regexp"
 
   "github.com/gin-gonic/gin"
+  "github.com/websitesfortrello/go-trello"
   _ "github.com/heroku/x/hmetrics/onload"
 )
 
@@ -53,9 +54,11 @@ func main() {
 
     // ioutil.NopCloser(bytes.NewReader(buf))
     // return json.Unmarshal(buf, dest)
+    cardId := trelloIdFromTitle(pr.PullRequest.Title)
     fmt.Println("logging output")
     fmt.Println("Title:", trelloIdFromTitle(pr.PullRequest.Title))
-    fmt.Println("Branch:", trelloIdFromBranch(pr.PullRequest.Head.Ref))
+    fmt.Println("Branch:", pr.PullRequest.Head.Ref)
+    fmt.Println("card name:", postPrLinkToTrelloCard(cardId))
     c.JSON(http.StatusOK, gin.H{"message": pr.Action, "status": http.StatusOK})
   })
 
@@ -70,4 +73,20 @@ func trelloIdFromTitle(title string) (string) {
 func trelloIdFromBranch(branch string) (string) {
   re := regexp.MustCompile(`\[([A-Za-z0-9]{8})\]`)
   return re.FindStringSubmatch(branch)[1]
+}
+
+func postPrLinkToTrelloCard(cardId string) {
+  appKey := os.Getenv("TRELLO_TOKEN")
+  token := os.Getenv("TRELLO_KEY")
+
+  trello, err := trello.NewAuthClient(appKey, &token)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+  card, err := trello.Card("trello")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(card.Name)
 }
