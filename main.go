@@ -10,14 +10,14 @@ import (
   _ "github.com/heroku/x/hmetrics/onload"
 )
 
-type Payload struct {
-  Action string `json:"action"`
-  PullRequest
-}
-
 type PullRequest struct {
   Url string `json:"url"`
   Title string `json:"title"`
+}
+
+type Payload struct {
+  Action string `json:"action"`
+  PullRequest `json:"pull_request"`
 }
 
 func main() {
