@@ -10,8 +10,14 @@ import (
   _ "github.com/heroku/x/hmetrics/onload"
 )
 
-type PullRequest struct {
+type Payload struct {
   Action string `json:"action"`
+  PullRequest
+}
+
+type PullRequest struct {
+  Url string `json:"url"`
+  Title string `json:"title"`
 }
 
 func main() {
@@ -31,7 +37,7 @@ func main() {
   })
 
   router.POST("/webhook", func(c *gin.Context) {
-    var pr PullRequest
+    var pr Payload
     c.BindJSON(&pr)
     // buf, e := ioutil.ReadAll(c.Request.Body)
     //
@@ -43,6 +49,7 @@ func main() {
     // return json.Unmarshal(buf, dest)
     fmt.Println("logging output:", pr.Action)
     fmt.Println(pr)
+    fmt.Println(pr.PullRequest.title)
     c.JSON(http.StatusOK, gin.H{"message": pr.Action, "status": http.StatusOK})
   })
 
