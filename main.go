@@ -49,7 +49,7 @@ func main() {
     // return json.Unmarshal(buf, dest)
     fmt.Println("logging output:", pr.Action)
     fmt.Println(pr)
-    fmt.Println(pr.PullRequest.title)
+    fmt.Println(pr.PullRequest.Title)
     c.JSON(http.StatusOK, gin.H{"message": pr.Action, "status": http.StatusOK})
   })
 
