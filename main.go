@@ -8,7 +8,7 @@ import (
   "regexp"
 
   "github.com/gin-gonic/gin"
-  "github.com/VojtechVitek/go-trello"
+  "github.com/adlio/trello"
   _ "github.com/heroku/x/hmetrics/onload"
 )
 
@@ -79,12 +79,12 @@ func postPrLinkToTrelloCard(cardId string) {
   appKey := os.Getenv("TRELLO_TOKEN")
   token := os.Getenv("TRELLO_KEY")
 
-  trello, err := trello.NewAuthClient(appKey, &token)
+  client, err := trello.NewClient(appKey, token)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-  card, err := trello.Card("trello")
+  card, err := client.GetCard(cardId, trello.Defaults())
 	if err != nil {
 		log.Fatal(err)
 	}
