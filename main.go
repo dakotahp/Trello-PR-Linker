@@ -10,9 +10,14 @@ import (
   _ "github.com/heroku/x/hmetrics/onload"
 )
 
+type Head struct {
+  Ref string `json:"ref"`
+}
+
 type PullRequest struct {
   Url string `json:"url"`
   Title string `json:"title"`
+  Head `json:"head"`
 }
 
 type Payload struct {
@@ -47,11 +52,15 @@ func main() {
 
     // ioutil.NopCloser(bytes.NewReader(buf))
     // return json.Unmarshal(buf, dest)
-    fmt.Println("logging output:", pr.Action)
-    fmt.Println(pr)
-    fmt.Println(pr.PullRequest.Title)
+    fmt.Println("logging output")
+    fmt.Println("Title:", trelloIdFromString(pr.PullRequest.Title))
+    fmt.Println("Branch:", pr.PullRequest.Head.Ref)
     c.JSON(http.StatusOK, gin.H{"message": pr.Action, "status": http.StatusOK})
   })
 
   router.Run(":" + port)
+}
+
+func trelloIdFromString(title string) (string) {
+  return title
 }
