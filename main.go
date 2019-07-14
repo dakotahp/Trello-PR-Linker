@@ -8,7 +8,7 @@ import (
   "regexp"
 
   "github.com/gin-gonic/gin"
-  "github.com/websitesfortrello/go-trello"
+  "github.com/VojtechVitek/go-trello"
   _ "github.com/heroku/x/hmetrics/onload"
 )
 
