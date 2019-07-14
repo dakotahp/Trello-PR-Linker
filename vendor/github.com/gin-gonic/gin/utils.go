@@ -7,17 +7,14 @@ package gin
 import (
 	"encoding/xml"
 	"net/http"
-	"os"
 	"path"
 	"reflect"
 	"runtime"
 	"strings"
 )
 
-// BindKey indicates a default bind key.
 const BindKey = "_gin-gonic/gin/bindkey"
 
-// Bind is a helper function for given interface object and returns a Gin middleware.
 func Bind(val interface{}) HandlerFunc {
 	value := reflect.ValueOf(val)
 	if value.Kind() == reflect.Ptr {
@@ -35,24 +32,21 @@ func Bind(val interface{}) HandlerFunc {
 	}
 }
 
-// WrapF is a helper function for wrapping http.HandlerFunc and returns a Gin middleware.
 func WrapF(f http.HandlerFunc) HandlerFunc {
 	return func(c *Context) {
 		f(c.Writer, c.Request)
 	}
 }
 
-// WrapH is a helper function for wrapping http.Handler and returns a Gin middleware.
 func WrapH(h http.Handler) HandlerFunc {
 	return func(c *Context) {
 		h.ServeHTTP(c.Writer, c.Request)
 	}
 }
 
-// H is a shortcut for map[string]interface{}
 type H map[string]interface{}
 
-// MarshalXML allows type H to be used with xml.Marshal.
+// Allows type H to be used with xml.Marshal
 func (h H) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	start.Name = xml.Name{
 		Space: "",
@@ -70,14 +64,10 @@ func (h H) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 			return err
 		}
 	}
-
-	return e.EncodeToken(xml.EndElement{Name: start.Name})
-}
-
-func assert1(guard bool, text string) {
-	if !guard {
-		panic(text)
+	if err := e.EncodeToken(xml.EndElement{Name: start.Name}); err != nil {
+		return err
 	}
+	return nil
 }
 
 func filterFlags(content string) string {
@@ -103,7 +93,12 @@ func parseAccept(acceptHeader string) []string {
 	parts := strings.Split(acceptHeader, ",")
 	out := make([]string, 0, len(parts))
 	for _, part := range parts {
-		if part = strings.TrimSpace(strings.Split(part, ";")[0]); part != "" {
+		index := strings.IndexByte(part, ';')
+		if index >= 0 {
+			part = part[0:index]
+		}
+		part = strings.TrimSpace(part)
+		if len(part) > 0 {
 			out = append(out, part)
 		}
 	}
@@ -111,10 +106,11 @@ func parseAccept(acceptHeader string) []string {
 }
 
 func lastChar(str string) uint8 {
-	if str == "" {
+	size := len(str)
+	if size == 0 {
 		panic("The length of the string can't be 0")
 	}
-	return str[len(str)-1]
+	return str[size-1]
 }
 
 func nameOfFunction(f interface{}) string {
@@ -122,7 +118,7 @@ func nameOfFunction(f interface{}) string {
 }
 
 func joinPaths(absolutePath, relativePath string) string {
-	if relativePath == "" {
+	if len(relativePath) == 0 {
 		return absolutePath
 	}
 
@@ -132,20 +128,4 @@ func joinPaths(absolutePath, relativePath string) string {
 		return finalPath + "/"
 	}
 	return finalPath
-}
-
-func resolveAddress(addr []string) string {
-	switch len(addr) {
-	case 0:
-		if port := os.Getenv("PORT"); port != "" {
-			debugPrint("Environment variable PORT=\"%s\"", port)
-			return ":" + port
-		}
-		debugPrint("Environment variable PORT is undefined. Using port :8080 by default")
-		return ":8080"
-	case 1:
-		return addr[0]
-	default:
-		panic("too much parameters")
-	}
 }

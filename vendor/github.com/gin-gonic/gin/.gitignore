@@ -1,7 +1,4 @@
-vendor/*
-!vendor/vendor.json
+Godeps/*
+!Godeps/Godeps.json
 coverage.out
 count.out
-test
-profile.out
-tmp.out

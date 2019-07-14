@@ -19,8 +19,6 @@ github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZN
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/testify v1.3.0 h1:TivCn/peBQ7UY8ooIcPgZFpTNSz0Q2U6UrFlUfqbe0Q=
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
-github.com/websitesfortrello/go-trello v0.0.0-20161104131554-4162562a3fb9 h1:kzbHuCI5s9SOP0bNird5lR5gH1DECbtNnOcGFcIQ5iw=
-github.com/websitesfortrello/go-trello v0.0.0-20161104131554-4162562a3fb9/go.mod h1:yxviUJmnrKQeVSw0+HN8QYPTlo9isX1T1cIPr4CiQiA=
 golang.org/x/net v0.0.0-20150629084131-d9558e5c97f8 h1:NnqNZS6fS9JZOjzXyL3/g0j4bEm1B7HCkiVH9F5Zu8U=
 golang.org/x/net v0.0.0-20150629084131-d9558e5c97f8/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
 gopkg.in/bluesuncorp/validator.v5 v5.9.1 h1:XEU2HtMj0Rki3kmHh+uilvENyWgDEaR5LDLtYsjiumM=
