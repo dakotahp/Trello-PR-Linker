@@ -4,6 +4,7 @@ import (
   "log"
   "net/http"
   "os"
+  "fmt"
 
   "github.com/gin-gonic/gin"
   _ "github.com/heroku/x/hmetrics/onload"
@@ -40,7 +41,8 @@ func main() {
 
     // ioutil.NopCloser(bytes.NewReader(buf))
     // return json.Unmarshal(buf, dest)
-
+    fmt.Println("logging output:", pr.Action)
+    fmt.Println(pr)
     c.JSON(http.StatusOK, gin.H{"message": pr.Action, "status": http.StatusOK})
   })
 
