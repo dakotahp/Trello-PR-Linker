@@ -75,18 +75,16 @@ func trelloIdFromBranch(branch string) (string) {
   return re.FindStringSubmatch(branch)[1]
 }
 
-func postPrLinkToTrelloCard(cardId string) {
+func postPrLinkToTrelloCard(cardId string) (string) {
   appKey := os.Getenv("TRELLO_TOKEN")
   token := os.Getenv("TRELLO_KEY")
 
-  client, err := trello.NewClient(appKey, token)
-	if err != nil {
-		log.Fatal(err)
-	}
+  client := trello.NewClient(appKey, token)
 
   card, err := client.GetCard(cardId, trello.Defaults())
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Println(card.Name)
+  return card.Name
 }
