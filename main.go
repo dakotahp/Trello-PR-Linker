@@ -85,6 +85,6 @@ func postPrLinkToTrelloCard(cardId string) (string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(card.Name)
+	fmt.Println(card)
   return card.Name
 }
