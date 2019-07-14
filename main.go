@@ -54,15 +54,20 @@ func main() {
     // ioutil.NopCloser(bytes.NewReader(buf))
     // return json.Unmarshal(buf, dest)
     fmt.Println("logging output")
-    fmt.Println("Title:", trelloIdFromString(pr.PullRequest.Title))
-    fmt.Println("Branch:", pr.PullRequest.Head.Ref)
+    fmt.Println("Title:", trelloIdFromTitle(pr.PullRequest.Title))
+    fmt.Println("Branch:", trelloIdFromBranch(pr.PullRequest.Head.Ref))
     c.JSON(http.StatusOK, gin.H{"message": pr.Action, "status": http.StatusOK})
   })
 
   router.Run(":" + port)
 }
 
-func trelloIdFromString(title string) (string) {
+func trelloIdFromTitle(title string) (string) {
   re := regexp.MustCompile(`\[([A-Za-z0-9]{8})\]`)
   return re.FindStringSubmatch(title)[1]
+}
+
+func trelloIdFromBranch(branch string) (string) {
+  re := regexp.MustCompile(`\[([A-Za-z0-9]{8})\]`)
+  return re.FindStringSubmatch(branch)[1]
 }
