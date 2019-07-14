@@ -62,5 +62,6 @@ func main() {
 }
 
 func trelloIdFromString(title string) (string) {
-  return title
+  re := regexp.MustCompile(`\[([A-Za-z0-9]{8})\]`)
+  return re.FindString(title)
 }
