@@ -8,8 +8,8 @@ import (
   "regexp"
 
   "github.com/gin-gonic/gin"
-  "github.com/adlio/trello"
   _ "github.com/heroku/x/hmetrics/onload"
+  "github.com/adlio/trello"
 )
 
 type Head struct {
