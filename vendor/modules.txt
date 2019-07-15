@@ -19,3 +19,5 @@ github.com/pkg/errors
 golang.org/x/net/context
 # gopkg.in/bluesuncorp/validator.v5 v5.9.1
 gopkg.in/bluesuncorp/validator.v5
+# gopkg.in/rjz/githubhook.v0 v0.0.1
+gopkg.in/rjz/githubhook.v0
