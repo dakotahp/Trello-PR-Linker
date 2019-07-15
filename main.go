@@ -48,7 +48,7 @@ func main() {
   router.POST("/webhook", func(c *gin.Context) {
     var pr Payload
 
-    hook, err := githubhook.Parse(secret, c.Request)
+    _, err := githubhook.Parse(secret, c.Request)
 
     if err != nil {
       fmt.Print("Error with secure webhook:", err)
