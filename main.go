@@ -10,7 +10,7 @@ import (
   "github.com/gin-gonic/gin"
   _ "github.com/heroku/x/hmetrics/onload"
   "github.com/adlio/trello"
-  "gopkg.in/rjz/githubhook.v0"
+  // "gopkg.in/rjz/githubhook.v0"
 )
 
 type Head struct {
@@ -30,7 +30,7 @@ type Payload struct {
 
 func main() {
   port := os.Getenv("PORT")
-  secret := []byte(os.Getenv("SECRET_TOKEN"))
+  // secret := []byte(os.Getenv("SECRET_TOKEN"))
 
   if port == "" {
     log.Fatal("$PORT must be set")
@@ -48,7 +48,7 @@ func main() {
   router.POST("/webhook", func(c *gin.Context) {
     var pr Payload
 
-    _, err := githubhook.Parse(secret, c.Request)
+    // _, err := githubhook.Parse(secret, c.Request)
 
     if err != nil {
       fmt.Print("Error with secure webhook:", err)
