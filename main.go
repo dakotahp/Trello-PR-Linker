@@ -10,7 +10,7 @@ import (
   "github.com/gin-gonic/gin"
   _ "github.com/heroku/x/hmetrics/onload"
   "github.com/adlio/trello"
-  // "gopkg.in/rjz/githubhook.v0"
+  "gopkg.in/rjz/githubhook.v0"
 )
 
 type Head struct {
@@ -30,7 +30,7 @@ type Payload struct {
 
 func main() {
   port := os.Getenv("PORT")
-  // secret := []byte(os.Getenv("SECRET_TOKEN"))
+  secret := []byte(os.Getenv("SECRET_TOKEN"))
 
   if port == "" {
     log.Fatal("$PORT must be set")
@@ -47,25 +47,24 @@ func main() {
 
   router.POST("/webhook", func(c *gin.Context) {
     var pr Payload
-
-    // _, err := githubhook.Parse(secret, c.Request)
-
-    // if err != nil {
-    //   fmt.Print("Error with secure webhook:", err)
-    // }
-
     c.BindJSON(&pr)
+    fmt.Println("before", pr)
+    _, err := githubhook.Parse(secret, c.Request)
+
+    if err != nil {
+      fmt.Print("Error with secure webhook:", err)
+    }
 
     if pr.Action == "opened" {
-      fmt.Println("Running on PR:", pr.PullRequest.HtmlUrl)
+      fmt.Println("Operating on PR:", pr.PullRequest.HtmlUrl)
       cardId := trelloIdFromTitle(pr.PullRequest.Title)
       postPrLinkToTrelloCard(cardId, pr.PullRequest.HtmlUrl)
     } else {
       fmt.Println("Skipping due to action:", pr.Action)
-      fmt.Println(pr)
+      fmt.Println("after", pr)
     }
 
-    c.JSON(http.StatusOK, gin.H{"url": pr.PullRequest.HtmlUrl, "status": http.StatusOK})
+    c.JSON(http.StatusOK, gin.H{"status": http.StatusOK})
   })
 
   router.Run(":" + port)
