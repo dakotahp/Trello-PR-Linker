@@ -47,12 +47,12 @@ func main() {
 
   router.POST("/webhook", func(c *gin.Context) {
     var pr Payload
-    c.BindJSON(&pr)
-    fmt.Println("before", pr)
+    // fmt.Println("before", pr)
     _, err := githubhook.Parse(secret, c.Request)
+    c.BindJSON(&pr)
 
     if err != nil {
-      fmt.Print("Error with secure webhook:", err)
+      fmt.Println("Error with secure webhook:", err)
     }
 
     if pr.Action == "opened" {
