@@ -50,9 +50,9 @@ func main() {
 
     // _, err := githubhook.Parse(secret, c.Request)
 
-    if err != nil {
-      fmt.Print("Error with secure webhook:", err)
-    }
+    // if err != nil {
+    //   fmt.Print("Error with secure webhook:", err)
+    // }
 
     c.BindJSON(&pr)
 
