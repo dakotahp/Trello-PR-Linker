@@ -23,3 +23,5 @@ golang.org/x/net v0.0.0-20150629084131-d9558e5c97f8 h1:NnqNZS6fS9JZOjzXyL3/g0j4b
 golang.org/x/net v0.0.0-20150629084131-d9558e5c97f8/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
 gopkg.in/bluesuncorp/validator.v5 v5.9.1 h1:XEU2HtMj0Rki3kmHh+uilvENyWgDEaR5LDLtYsjiumM=
 gopkg.in/bluesuncorp/validator.v5 v5.9.1/go.mod h1:ScQmud/GM3iSR85jRE+8BI8E8oFv5oj4qyd5Xaw7hgE=
+gopkg.in/rjz/githubhook.v0 v0.0.1 h1:SZA23Y6W9wAT37sCgkW6LDo7ehXIz7UeVa8DKBuBvxM=
+gopkg.in/rjz/githubhook.v0 v0.0.1/go.mod h1:NW44V8TljAeksKVWWUj74WiIxWDGOthwUwETBitgTpI=
