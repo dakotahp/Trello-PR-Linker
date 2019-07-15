@@ -54,13 +54,14 @@ func main() {
       fmt.Print("Error with secure webhook:", err)
     }
 
-
     if pr.Action == "opened" {
       c.BindJSON(&pr)
 
       fmt.Println("Running on PR:", pr.PullRequest.HtmlUrl)
       cardId := trelloIdFromTitle(pr.PullRequest.Title)
       postPrLinkToTrelloCard(cardId, pr.PullRequest.HtmlUrl)
+    } else {
+      fmt.Println("Skipping due to action:", pr.Action)
     }
 
     c.JSON(http.StatusOK, gin.H{"url": pr.PullRequest.HtmlUrl, "status": http.StatusOK})
