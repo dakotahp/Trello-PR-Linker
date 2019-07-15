@@ -62,6 +62,7 @@ func main() {
       postPrLinkToTrelloCard(cardId, pr.PullRequest.HtmlUrl)
     } else {
       fmt.Println("Skipping due to action:", pr.Action)
+      fmt.Println(pr)
     }
 
     c.JSON(http.StatusOK, gin.H{"url": pr.PullRequest.HtmlUrl, "status": http.StatusOK})
