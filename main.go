@@ -47,8 +47,11 @@ func main() {
 
   router.POST("/webhook", func(c *gin.Context) {
     var pr Payload
+    request := c.Request
     // fmt.Println("before", pr)
-    _, err := githubhook.Parse(secret, c.Request)
+
+    _, err := githubhook.Parse(secret, request)
+
     c.BindJSON(&pr)
 
     if err != nil {
