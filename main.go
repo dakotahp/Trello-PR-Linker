@@ -47,11 +47,12 @@ func main() {
     var pr Payload
     c.BindJSON(&pr)
 
-    cardId := trelloIdFromTitle(pr.PullRequest.Title)
-
-    fmt.Println("Title:", trelloIdFromTitle(pr.PullRequest.Title))
-    fmt.Println("Branch:", pr.PullRequest.Head.Ref)
-    fmt.Println("card name:", postPrLinkToTrelloCard(cardId, pr.PullRequest.HtmlUrl))
+    if pr.Action == "opened" {
+      cardId := trelloIdFromTitle(pr.PullRequest.Title)
+      fmt.Println("Title:", trelloIdFromTitle(pr.PullRequest.Title))
+      fmt.Println("Branch:", pr.PullRequest.Head.Ref)
+      fmt.Println("card name:", postPrLinkToTrelloCard(cardId, pr.PullRequest.HtmlUrl))
+    }
 
     c.JSON(http.StatusOK, gin.H{"message": pr.Action, "status": http.StatusOK})
   })
