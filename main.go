@@ -11,7 +11,6 @@ import (
   "crypto/subtle"
   "encoding/hex"
   "io/ioutil"
-  "bytes"
   "encoding/json"
 
   "github.com/gin-gonic/gin"
@@ -57,19 +56,9 @@ func main() {
 
   router.POST("/webhook", func(c *gin.Context) {
     var pr Payload
-
     var reqBody []byte
     reqBody, _ = ioutil.ReadAll(c.Request.Body)
-    fmt.Println("signature match? :", verifySignature(secret, string(reqBody), c.Request.Header.Get("X-Hub-Signature")))
-
-    c.Request.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(reqBody)))
-
-    buf := new(bytes.Buffer)
-    buf.ReadFrom(c.Request.Body)
-    json.Unmarshal(buf.Bytes(), &pr)
-
-    NrawBody, _ := c.GetRawData()
-    fmt.Println("second", string(NrawBody))
+    json.Unmarshal(reqBody, &pr)
 
     if !verifySignature(secret, string(reqBody), c.Request.Header.Get("X-Hub-Signature")) {
       log.Fatal("Signatures didn't match")
