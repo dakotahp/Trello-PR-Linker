@@ -56,8 +56,9 @@ func main() {
   router.POST("/webhook", func(c *gin.Context) {
     var pr Payload
 
+    cc := c.Copy()
     buf := new(bytes.Buffer)
-    buf.ReadFrom(c.Request.Body)
+    buf.ReadFrom(cc.Request.Body)
     newStr := buf.String()
 
     c.BindJSON(&pr)
