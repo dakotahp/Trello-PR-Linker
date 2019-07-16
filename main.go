@@ -64,7 +64,7 @@ func main() {
       cardId := trelloIdFromTitle(pr.PullRequest.Title)
       postPrLinkToTrelloCard(cardId, pr.PullRequest.HtmlUrl)
     } else {
-      fmt.Println("Skipping due to action:", pr.Action)
+      fmt.Println("Skipping PR due to action:", pr.Action)
       fmt.Println("Payload:", pr)
     }
 
