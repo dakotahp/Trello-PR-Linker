@@ -10,7 +10,6 @@ import (
   "crypto/sha1"
   "crypto/subtle"
   "encoding/hex"
-  "bytes"
 
   "github.com/gin-gonic/gin"
   _ "github.com/heroku/x/hmetrics/onload"
@@ -55,14 +54,13 @@ func main() {
 
   router.POST("/webhook", func(c *gin.Context) {
     var pr Payload
+
     c.ShouldBindJSON(&pr)
 
-    buf := new(bytes.Buffer)
-    buf.ReadFrom(c.Request.Body)
-    newStr := buf.String()
-    fmt.Println("request body", newStr)
+    newStr, _ := c.GetRawData()
+    fmt.Println("request body:", string(newStr))
 
-    fmt.Println("signature match? :", verifySignature(secret, newStr, c.Request.Header.Get("X-Hub-Signature")))
+    fmt.Println("signature match? :", verifySignature(secret, string(newStr), c.Request.Header.Get("X-Hub-Signature")))
 
     // if !verifySignature(os.Getenv("SECRET_TOKEN"), newStr, c.Request.Header.Get("X-Hub-Signature")) {
     //   log.Fatal("Signatures didn't match")
