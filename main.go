@@ -15,7 +15,6 @@ import (
   "github.com/gin-gonic/gin"
   _ "github.com/heroku/x/hmetrics/onload"
   "github.com/adlio/trello"
-  "gopkg.in/rjz/githubhook.v0"
 )
 
 type Headers struct {
@@ -39,7 +38,7 @@ type Payload struct {
 
 func main() {
   port := os.Getenv("PORT")
-  secret := []byte(os.Getenv("SECRET_TOKEN"))
+  secret := os.Getenv("SECRET_TOKEN")
 
   if port == "" {
     log.Fatal("$PORT must be set")
@@ -56,27 +55,17 @@ func main() {
 
   router.POST("/webhook", func(c *gin.Context) {
     var pr Payload
-    request := c.Request
-    // fmt.Println("before", pr)
 
-    // h := Headers{}
-    //
-		// if err := c.ShouldBindHeader(&h); err != nil {
-		// 	c.JSON(200, err)
-		// }
     buf := new(bytes.Buffer)
     buf.ReadFrom(c.Request.Body)
     newStr := buf.String()
 
-
-    _, err := githubhook.Parse(secret, request)
-
     c.BindJSON(&pr)
 
-    fmt.Println("signature match? :", verifySignature(os.Getenv("SECRET_TOKEN"), newStr, c.Request.Header.Get("X-Hub-Signature")))
+    fmt.Println("signature match? :", verifySignature(secret, newStr, c.Request.Header.Get("X-Hub-Signature")))
 
-    if err != nil {
-      fmt.Println("Error with secure webhook:", err)
+    if !verifySignature(os.Getenv("SECRET_TOKEN"), newStr, c.Request.Header.Get("X-Hub-Signature")) {
+      log.Fatal("Signatures didn't match")
     }
 
     if pr.Action == "opened" {
