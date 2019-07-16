@@ -38,7 +38,7 @@ type Payload struct {
 
 func main() {
   port := os.Getenv("PORT")
-  // secret := os.Getenv("SECRET_TOKEN")
+  secret := os.Getenv("SECRET_TOKEN")
 
   if port == "" {
     log.Fatal("$PORT must be set")
@@ -63,11 +63,11 @@ func main() {
 
     fmt.Println("body", newStr)
 
-    // fmt.Println("signature match? :", verifySignature(secret, newStr, c.Request.Header.Get("X-Hub-Signature")))
+    fmt.Println("signature match? :", verifySignature(secret, newStr, c.Request.Header.Get("X-Hub-Signature")))
 
-    // if !verifySignature(os.Getenv("SECRET_TOKEN"), newStr, c.Request.Header.Get("X-Hub-Signature")) {
-    //   log.Fatal("Signatures didn't match")
-    // }
+    if !verifySignature(os.Getenv("SECRET_TOKEN"), newStr, c.Request.Header.Get("X-Hub-Signature")) {
+      log.Fatal("Signatures didn't match")
+    }
 
     if pr.Action == "opened" {
       fmt.Println("Operating on PR:", pr.PullRequest.HtmlUrl)
