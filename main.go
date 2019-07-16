@@ -60,12 +60,13 @@ func main() {
     buf := new(bytes.Buffer)
     buf.ReadFrom(c.Request.Body)
     newStr := buf.String()
+    fmt.Println("request body", newStr)
 
     fmt.Println("signature match? :", verifySignature(secret, newStr, c.Request.Header.Get("X-Hub-Signature")))
 
-    if !verifySignature(os.Getenv("SECRET_TOKEN"), newStr, c.Request.Header.Get("X-Hub-Signature")) {
-      log.Fatal("Signatures didn't match")
-    }
+    // if !verifySignature(os.Getenv("SECRET_TOKEN"), newStr, c.Request.Header.Get("X-Hub-Signature")) {
+    //   log.Fatal("Signatures didn't match")
+    // }
 
     if pr.Action == "opened" {
       fmt.Println("Operating on PR:", pr.PullRequest.HtmlUrl)
