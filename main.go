@@ -97,10 +97,10 @@ func trelloIdFromBranch(branch string) (string) {
 }
 
 func postPrLinkToTrelloCard(cardId string, url string) {
-  appKey := os.Getenv("TRELLO_TOKEN")
-  token := os.Getenv("TRELLO_KEY")
+  key := os.Getenv("TRELLO_KEY")
+  token := os.Getenv("TRELLO_TOKEN")
 
-  client := trello.NewClient(appKey, token)
+  client := trello.NewClient(key, token)
 
   fmt.Println("Getting card from Trello:", cardId)
   card, err := client.GetCard(cardId, trello.Defaults())
