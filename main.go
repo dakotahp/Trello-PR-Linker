@@ -61,7 +61,7 @@ func main() {
     buf.ReadFrom(cc.Request.Body)
     newStr := buf.String()
 
-    c.BindJSON(&pr)
+    c.ShouldBindJSON(&pr)
 
     fmt.Println("signature match? :", verifySignature(secret, newStr, c.Request.Header.Get("X-Hub-Signature")))
 
