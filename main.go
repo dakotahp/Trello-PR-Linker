@@ -1,17 +1,17 @@
 package main
 
 import (
-  "log"
-  "net/http"
-  "os"
-  "fmt"
-  "regexp"
   "crypto/hmac"
   "crypto/sha1"
   "crypto/subtle"
   "encoding/hex"
-  "io/ioutil"
   "encoding/json"
+  "fmt"
+  "io/ioutil"
+  "log"
+  "net/http"
+  "os"
+  "regexp"
 
   "github.com/gin-gonic/gin"
   _ "github.com/heroku/x/hmetrics/onload"
@@ -61,11 +61,19 @@ func main() {
 
     if pr.Action == "opened" {
       fmt.Println("Operating on PR:", pr.PullRequest.HtmlUrl)
-      cardId := trelloIdFromTitle(pr.PullRequest.Title)
-      postPrLinkToTrelloCard(cardId, pr.PullRequest.HtmlUrl)
+
+      titleId := trelloIdFromTitle(pr.PullRequest.Title)
+      branchId := trelloIdFromBranch(pr.PullRequest.Head.Ref)
+
+      if titleId != "" {
+        postPrLinkToTrelloCard(titleId, pr.PullRequest.HtmlUrl)
+      } else if branchId != "" {
+        postPrLinkToTrelloCard(branchId, pr.PullRequest.HtmlUrl)
+      } else {
+        fmt.Println("Skipping, ticket ID not found in title or branch", pr.PullRequest.Title, pr.PullRequest.Head.Ref)
+      }
     } else {
-      fmt.Println("Skipping PR due to action:", pr.Action)
-      fmt.Println("Payload:", pr)
+      fmt.Println("Skipping, action not opened", pr.PullRequest.HtmlUrl, pr.Action)
     }
 
     c.JSON(http.StatusOK, gin.H{"status": http.StatusOK})
@@ -88,12 +96,24 @@ func verifySignature(secretToken, payloadBody string, signatureToCompareWith str
 
 func trelloIdFromTitle(title string) (string) {
   re := regexp.MustCompile(`\[([A-Za-z0-9]{8})\]`)
-  return re.FindStringSubmatch(title)[1]
+  matches := re.FindStringSubmatch(title)
+
+  if len(matches) > 0 {
+    return matches[1]
+  }
+
+  return ""
 }
 
 func trelloIdFromBranch(branch string) (string) {
-  re := regexp.MustCompile(`\[([A-Za-z0-9]{8})\]`)
-  return re.FindStringSubmatch(branch)[1]
+  re := regexp.MustCompile(`([A-Za-z0-9]{8})(--|\/)`)
+  matches := re.FindStringSubmatch(branch)
+
+  if len(matches) > 0 {
+    return matches[1]
+  }
+
+  return ""
 }
 
 func postPrLinkToTrelloCard(cardId string, url string) {
