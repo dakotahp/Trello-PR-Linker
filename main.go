@@ -57,16 +57,17 @@ func main() {
   router.POST("/webhook", func(c *gin.Context) {
     var pr Payload
 
-
     // newStr, _ := c.GetRawData()
-
-    buf := make([]byte, 1024)
-  	num, _ := c.Request.Body.Read(buf)
-  	reqBody := string(buf[0:num])
-    fmt.Println("request body:", reqBody)
-    fmt.Println("signature match? :", verifySignature(secret, reqBody, c.Request.Header.Get("X-Hub-Signature")))
+    var reqBody []byte
+    reqBody, _ = ioutil.ReadAll(c.Request.Body)
+    fmt.Println("request body:", string(reqBody))
+    fmt.Println("signature match? :", verifySignature(secret, string(reqBody), c.Request.Header.Get("X-Hub-Signature")))
 
     c.Request.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(reqBody)))
+
+    NrawBody, _ := c.GetRawData()
+    fmt.Println("second", string(NrawBody))
+
     c.ShouldBindJSON(&pr)
 
     // if !verifySignature(os.Getenv("SECRET_TOKEN"), newStr, c.Request.Header.Get("X-Hub-Signature")) {
@@ -90,9 +91,7 @@ func main() {
 
 func generateSignature(secretToken, payloadBody string) string {
 	mac := hmac.New(sha1.New, []byte(secretToken))
-  fmt.Println("payload before", payloadBody)
 	mac.Write([]byte(payloadBody))
-  fmt.Println("payload after", payloadBody)
 	expectedMAC := mac.Sum(nil)
 	return "sha1=" + hex.EncodeToString(expectedMAC)
 }
