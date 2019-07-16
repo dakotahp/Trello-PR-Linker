@@ -2,6 +2,14 @@
 
 An app that listens to GitHub PR webhooks and parses out Trello ticket IDs so it can attach the PR to them. It was written in Go and uses the gin-tonic framework for routing and exception handling. Hosting should be on Heroku due to it being created from a starter boilerplate repo for it.
 
+## How Does it Work?
+
+The app looks for a Trello ticket ID format (encoded string of 8 alphanumeric characters) in either the PR title or branch name.
+
+In the PR title, the format must include square brackets around it such as `[ticket ID] Fixed specs`. The ID can be parsed from any location in the title, not just the beginning.
+
+The branch name must have the ID with either double dashes following it (`ticketId--fixed-specs`) or a forward slash (`ticketId/fixed-specs`). You may have additional content at the beginning of the branch name such as a prefix (`teamName--ticketId--fixed-specs`).
+
 ## How to use
 
 ### Create a Webhooks on GitHub
