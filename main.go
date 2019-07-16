@@ -57,7 +57,6 @@ func main() {
   router.POST("/webhook", func(c *gin.Context) {
     var pr Payload
 
-    // newStr, _ := c.GetRawData()
     var reqBody []byte
     reqBody, _ = ioutil.ReadAll(c.Request.Body)
     fmt.Println("request body:", string(reqBody))
@@ -65,10 +64,13 @@ func main() {
 
     c.Request.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(reqBody)))
 
+    bytes := []byte(c.Request.Body)
+    json.Unmarshal(bytes, &pr)
+
     NrawBody, _ := c.GetRawData()
     fmt.Println("second", string(NrawBody))
 
-    c.ShouldBindJSON(&pr)
+    // c.ShouldBindJSON(&pr)
 
     // if !verifySignature(os.Getenv("SECRET_TOKEN"), newStr, c.Request.Header.Get("X-Hub-Signature")) {
     //   log.Fatal("Signatures didn't match")
