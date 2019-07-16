@@ -6,12 +6,21 @@ import (
   "os"
   "fmt"
   "regexp"
+  "crypto/hmac"
+  "crypto/sha1"
+  "crypto/subtle"
+  "encoding/hex"
+  "bytes"
 
   "github.com/gin-gonic/gin"
   _ "github.com/heroku/x/hmetrics/onload"
   "github.com/adlio/trello"
   "gopkg.in/rjz/githubhook.v0"
 )
+
+type Headers struct {
+  XHubSignature string `header:"X-Hub-Signature"`
+}
 
 type Head struct {
   Ref string `json:"ref"`
@@ -50,9 +59,21 @@ func main() {
     request := c.Request
     // fmt.Println("before", pr)
 
+    // h := Headers{}
+    //
+		// if err := c.ShouldBindHeader(&h); err != nil {
+		// 	c.JSON(200, err)
+		// }
+    buf := new(bytes.Buffer)
+    buf.ReadFrom(c.Request.Body)
+    newStr := buf.String()
+
+
     _, err := githubhook.Parse(secret, request)
 
     c.BindJSON(&pr)
+
+    fmt.Println("signature match? :", verifySignature(os.Getenv("SECRET_TOKEN"), newStr, c.Request.Header.Get("X-Hub-Signature")))
 
     if err != nil {
       fmt.Println("Error with secure webhook:", err)
@@ -71,6 +92,18 @@ func main() {
   })
 
   router.Run(":" + port)
+}
+
+func generateSignature(secretToken, payloadBody string) string {
+	mac := hmac.New(sha1.New, []byte(secretToken))
+	mac.Write([]byte(payloadBody))
+	expectedMAC := mac.Sum(nil)
+	return "sha1=" + hex.EncodeToString(expectedMAC)
+}
+
+func verifySignature(secretToken, payloadBody string, signatureToCompareWith string) bool {
+	signature := generateSignature(secretToken, payloadBody)
+	return subtle.ConstantTimeCompare([]byte(signature), []byte(signatureToCompareWith)) == 1
 }
 
 func trelloIdFromTitle(title string) (string) {
