@@ -18,10 +18,6 @@ import (
   "github.com/adlio/trello"
 )
 
-type Headers struct {
-  XHubSignature string `header:"X-Hub-Signature"`
-}
-
 type Head struct {
   Ref string `json:"ref"`
 }
@@ -48,7 +44,6 @@ func main() {
   router := gin.New()
   router.Use(gin.Logger())
   router.LoadHTMLGlob("templates/*.tmpl.html")
-  router.Static("/static", "static")
 
   router.GET("/", func(c *gin.Context) {
     c.HTML(http.StatusOK, "index.tmpl.html", nil)
@@ -70,7 +65,7 @@ func main() {
       postPrLinkToTrelloCard(cardId, pr.PullRequest.HtmlUrl)
     } else {
       fmt.Println("Skipping due to action:", pr.Action)
-      fmt.Println("after", pr)
+      fmt.Println("Payload:", pr)
     }
 
     c.JSON(http.StatusOK, gin.H{"status": http.StatusOK})
@@ -107,6 +102,7 @@ func postPrLinkToTrelloCard(cardId string, url string) {
 
   client := trello.NewClient(appKey, token)
 
+  fmt.Println("Getting card from Trello:", cardId)
   card, err := client.GetCard(cardId, trello.Defaults())
   if err != nil {
     log.Fatal(err)
@@ -117,6 +113,7 @@ func postPrLinkToTrelloCard(cardId string, url string) {
     URL: url,
   }
 
+  fmt.Println("Attaching URL:", url)
   cardErr := card.AddURLAttachment(&attachment)
   if cardErr != nil {
     fmt.Println(cardErr)
