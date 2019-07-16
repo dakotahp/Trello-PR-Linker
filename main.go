@@ -55,13 +55,11 @@ func main() {
 
   router.POST("/webhook", func(c *gin.Context) {
     var pr Payload
-
-    cc := c.Copy()
-    buf := new(bytes.Buffer)
-    buf.ReadFrom(cc.Request.Body)
-    newStr := buf.String()
-
     c.ShouldBindJSON(&pr)
+
+    buf := new(bytes.Buffer)
+    buf.ReadFrom(c.Request.Body)
+    newStr := buf.String()
 
     fmt.Println("signature match? :", verifySignature(secret, newStr, c.Request.Header.Get("X-Hub-Signature")))
 
