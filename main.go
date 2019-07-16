@@ -12,6 +12,7 @@ import (
   "encoding/hex"
   "io/ioutil"
   "bytes"
+  "encoding/json"
 
   "github.com/gin-gonic/gin"
   _ "github.com/heroku/x/hmetrics/onload"
@@ -64,8 +65,11 @@ func main() {
 
     c.Request.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(reqBody)))
 
-    bytes := []byte(c.Request.Body)
-    json.Unmarshal(bytes, &pr)
+    // bytes := []byte(c.Request.Body)
+    buf := new(bytes.Buffer)
+    buf.ReadFrom(c.Request.Body)
+    // b := buf.Bytes()
+    json.Unmarshal(buf.Bytes(), &pr)
 
     NrawBody, _ := c.GetRawData()
     fmt.Println("second", string(NrawBody))
