@@ -69,6 +69,7 @@ $ heroku open
 
 - [x] Secure request with hash
 - [x] Parse out ticket ID from branch
+- [x] Add more events like "edited"
 
 ## Attribution
 

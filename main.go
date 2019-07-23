@@ -59,7 +59,7 @@ func main() {
       log.Fatal("Signatures didn't match")
     }
 
-    if pr.Action == "opened" {
+    if pr.Action == "opened" || pr.Action == "edited" {
       fmt.Println("Operating on PR:", pr.PullRequest.HtmlUrl)
 
       titleId := trelloIdFromTitle(pr.PullRequest.Title)
@@ -73,7 +73,7 @@ func main() {
         fmt.Println("Skipping, ticket ID not found in title or branch", pr.PullRequest.Title, pr.PullRequest.Head.Ref)
       }
     } else {
-      fmt.Println("Skipping, action not opened", pr.PullRequest.HtmlUrl, pr.Action)
+      fmt.Println("Skipping, action not relevant", pr.PullRequest.HtmlUrl, pr.Action)
     }
 
     c.JSON(http.StatusOK, gin.H{"status": http.StatusOK})
