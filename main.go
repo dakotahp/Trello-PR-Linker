@@ -133,7 +133,7 @@ func postPrLinkToTrelloCard(cardId string, url string) {
       Name: "PR",
       URL: url,
     }
-
+    fmt.Println(prAlreadyAttached(card, url))
     fmt.Println("Attaching URL:", url)
     cardErr := card.AddURLAttachment(&attachment)
     if cardErr != nil {
@@ -143,6 +143,8 @@ func postPrLinkToTrelloCard(cardId string, url string) {
 }
 
 func prAlreadyAttached(card *trello.Card, url string) (bool) {
+  fmt.Println("Attachments", card.Attachments)
+  fmt.Println("Card", card)
   for i := 0; i < len(card.Attachments); i++ {
     fmt.Println(card.Attachments[i])
     fmt.Println(card.Attachments[i].URL)
