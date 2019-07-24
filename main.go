@@ -144,6 +144,9 @@ func postPrLinkToTrelloCard(cardId string, url string) {
 
 func prAlreadyAttached(card *trello.Card, url string) (bool) {
   for i := 0; i < len(card.Attachments); i++ {
+    fmt.Println(card.Attachments[i])
+    fmt.Println(card.Attachments[i].URL)
+    fmt.Println(url)
     if card.Attachments[i].URL == url {
       return true
     }
