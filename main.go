@@ -139,8 +139,8 @@ func postPrLinkToTrelloCard(cardId string, url string) {
       Name: "PR",
       URL: url,
     }
-    fmt.Println(prAlreadyAttached(card, url))
-    fmt.Println("Attaching URL:", url)
+
+    fmt.Println("Attaching URL to ticket:", url)
     cardErr := card.AddURLAttachment(&attachment)
     if cardErr != nil {
       fmt.Println(cardErr)
@@ -149,16 +149,13 @@ func postPrLinkToTrelloCard(cardId string, url string) {
 }
 
 func prAlreadyAttached(card *trello.Card, url string) (bool) {
-  fmt.Println("Attachments", card.Attachments)
-  fmt.Println("Card", card)
   for i := 0; i < len(card.Attachments); i++ {
-    fmt.Println(card.Attachments[i])
-    fmt.Println(card.Attachments[i].URL)
-    fmt.Println(url)
     if card.Attachments[i].URL == url {
+      fmt.Println("PR already attached to ticket, skipping!")
       return true
     }
   }
 
+  fmt.Println("PR not attached to ticket")
   return false
 }
