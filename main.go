@@ -123,7 +123,13 @@ func postPrLinkToTrelloCard(cardId string, url string) {
   client := trello.NewClient(key, token)
 
   fmt.Println("Getting card from Trello:", cardId)
-  card, err := client.GetCard(cardId, trello.Defaults())
+
+  args := trello.Arguments{
+    "attachments": "true",
+  }
+
+  card, err := client.GetCard(cardId, args)
+
   if err != nil {
     log.Fatal(err)
   }
